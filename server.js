@@ -13,7 +13,11 @@ const server = http.createServer(app);
 // Get allowed origins from environment variable
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
-  : ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"];
+  : [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://campus-lost-found-frontend-xeac.vercel.app",
+    ];
 
 // CORS configuration for Socket.io
 const io = socketIo(server, {
