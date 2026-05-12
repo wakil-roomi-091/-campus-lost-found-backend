@@ -8,7 +8,7 @@ const {
   verifyOTP,
   resendOTP,
 } = require("../utils/otpService");
-const { sendOTPEmail } = require("../config/emailService");
+const { sendOTPEmail } = require("../config/emailServiceBrevo");
 const { validateEmail } = require("../utils/emailValidation");
 
 // Store OTP in memory (in production, use database)
@@ -94,12 +94,10 @@ router.post("/verify", async (req, res) => {
 
     // Validate password
     if (!password || password.length < 6) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          msg: "Password must be at least 6 characters",
-        });
+      return res.status(400).json({
+        success: false,
+        msg: "Password must be at least 6 characters",
+      });
     }
 
     // Hash password
