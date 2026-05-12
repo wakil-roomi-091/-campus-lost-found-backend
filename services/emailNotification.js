@@ -73,7 +73,7 @@ const sendMessageNotification = async (
                             </div>
                             <p style="color: #555;">Click the button below to view the message and reply:</p>
                             <div style="text-align: center;">
-                                <a href="http://localhost:3000/messages" class="button">View Message</a>
+                                <a href="https://campus-lost-found-frontend-xeac.vercel.app/messages" class="button">View Message</a>
                             </div>
                             <p style="color: #888; font-size: 14px; margin-top: 20px;">You can also reply directly from the website.</p>
                         </div>
@@ -96,7 +96,7 @@ const sendMessageNotification = async (
                 Message: "${messagePreview}"
                 
                 To view and reply to this message, please visit:
-                http://localhost:3000/messages
+                https://campus-lost-found-frontend-xeac.vercel.app/messages
                 
                 This is an automated notification. Please do not reply to this email.
                 

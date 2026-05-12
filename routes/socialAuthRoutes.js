@@ -84,7 +84,9 @@ router.get("/google/callback", (req, res, next) => {
 
     if (err || !user) {
       console.error("❌ Auth failed:", err?.message || info);
-      return res.redirect("http://localhost:3001/login?error=auth_failed");
+      return res.redirect(
+        "https://campus-lost-found-frontend-xeac.vercel.app/login?error=auth_failed",
+      );
     }
 
     try {
@@ -97,12 +99,14 @@ router.get("/google/callback", (req, res, next) => {
       });
       console.log("✅ Token generated successfully");
 
-      const redirectUrl = `http://localhost:3001/auth/callback?token=${token}&userId=${user._id}&name=${encodeURIComponent(user.name)}&email=${user.email}&role=${user.role}`;
+      const redirectUrl = `https://campus-lost-found-frontend-xeac.vercel.app/auth/callback?token=${token}&userId=${user._id}&name=${encodeURIComponent(user.name)}&email=${user.email}&role=${user.role}`;
       console.log("🔄 Redirecting to frontend");
       res.redirect(redirectUrl);
     } catch (err) {
       console.error("❌ Token error:", err);
-      res.redirect("http://localhost:3001/login?error=token_failed");
+      res.redirect(
+        "https://campus-lost-found-frontend-xeac.vercel.app/login?error=token_failed",
+      );
     }
   })(req, res, next);
 });

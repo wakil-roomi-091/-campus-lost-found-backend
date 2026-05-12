@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendResetEmail = async (email, resetToken, userName) => {
-  const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+  const resetUrl = `https://campus-lost-found-frontend-xeac.vercel.app/reset-password/${resetToken}`;
 
   const mailOptions = {
     from: `"Campus Lost & Found" <${process.env.EMAIL_USER}>`,
