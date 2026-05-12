@@ -1,34 +1,14 @@
-const brevo = require('@getbrevo/brevo');
-
-let apiInstance = null;
-
-const initBrevo = () => {
-  if (!process.env.BREVO_API_KEY) {
-    console.error("❌ BREVO_API_KEY not set in environment variables");
-    return false;
-  }
-  
-  // CORRECT SYNTAX for Brevo v3+
-  apiInstance = new brevo.TransactionalEmailsApi();
-  
-  // Set API key using the correct method
-  apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
-  
-  console.log("✅ Brevo API initialized");
-  return true;
-};
+const brevo = require("@getbrevo/brevo");
 
 const sendOTPEmail = async (email, otp, userName) => {
   try {
-    if (!apiInstance) {
-      const init = initBrevo();
-      if (!init) return false;
-    }
-
     console.log(`📧 Sending OTP to ${email} via Brevo API...`);
     const startTime = Date.now();
 
-    // Create email object
+    // Initialize directly without class
+    const apiInstance = new brevo.TransactionalEmailsApi();
+    apiInstance.setApiKey(process.env.BREVO_API_KEY);
+
     const sendSmtpEmail = {
       subject: "Email Verification - Campus Lost & Found",
       sender: { name: "Campus Lost & Found", email: "wakila971@gmail.com" },
@@ -55,14 +35,8 @@ const sendOTPEmail = async (email, otp, userName) => {
     return true;
   } catch (err) {
     console.error("❌ Brevo API error:", err.message);
-    if (err.response) {
-      console.error("Response data:", JSON.stringify(err.response.body, null, 2));
-    }
     return false;
   }
 };
-
-// Initialize on load
-initBrevo();
 
 module.exports = { sendOTPEmail };
