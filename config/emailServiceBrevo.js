@@ -1,18 +1,14 @@
-const brevo = require("@getbrevo/brevo");
+// server/config/emailServiceBrevo.js
+const https = require("https");
 
 const sendOTPEmail = async (email, otp, userName) => {
   try {
-    console.log(`📧 Sending OTP to ${email} via Brevo API...`);
+    console.log(`📧 Sending OTP to ${email} via Brevo HTTP API...`);
     const startTime = Date.now();
 
-    // CORRECT SYNTAX for v5.0.4
-    const defaultClient = brevo.ApiClient.instance;
-    const apiKey = defaultClient.authentications["api-key"];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
+    const apiKey = process.env.BREVO_API_KEY;
 
-    const apiInstance = new brevo.TransactionalEmailsApi();
-
-    const sendSmtpEmail = {
+    const data = JSON.stringify({
       sender: {
         name: "Campus Lost & Found",
         email: "wakila971@gmail.com",
@@ -33,17 +29,43 @@ const sendOTPEmail = async (email, otp, userName) => {
         </div>
       `,
       textContent: `Your verification code is: ${otp}\n\nThis code expires in 90 seconds.`,
+    });
+
+    const options = {
+      hostname: "api.brevo.com",
+      path: "/v3/smtp/email",
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key": apiKey,
+      },
     };
 
-    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    const response = await new Promise((resolve, reject) => {
+      const req = https.request(options, (res) => {
+        let body = "";
+        res.on("data", (chunk) => (body += chunk));
+        res.on("end", () => {
+          if (res.statusCode === 201 || res.statusCode === 200) {
+            console.log(`✅ Brevo response: ${res.statusCode}`);
+            resolve({ success: true });
+          } else {
+            console.error(`❌ Brevo error ${res.statusCode}: ${body}`);
+            reject(new Error(`HTTP ${res.statusCode}: ${body}`));
+          }
+        });
+      });
+      req.on("error", reject);
+      req.write(data);
+      req.end();
+    });
+
     const duration = Date.now() - startTime;
     console.log(`✅ OTP email sent to ${email} in ${duration}ms`);
     return true;
   } catch (err) {
     console.error("❌ Brevo API error:", err.message);
-    if (err.response) {
-      console.error("Response:", err.response.body);
-    }
     return false;
   }
 };
